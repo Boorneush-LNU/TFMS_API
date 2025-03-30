@@ -13,31 +13,53 @@ namespace TransportFleetManagementSystem_MVC.Controllers
                 _vehicleRepository = vehicleRepository;
                 }
 
-        // GET: Vehicle/Index        
-        public async Task<IActionResult> Index()
-                {
-                var vehicles = await _vehicleRepository.GetAllAsync();
-            ViewBag.TotalVehicles = vehicles.Count();
-            ViewBag.LiveVehicles = vehicles.Count(v => v.Status == "Active");
-            ViewBag.Maintenance = vehicles.Count(v => v.Status == "Maintenance");
-            ViewBag.Inactive = vehicles.Count(v => v.Status == "Inactive");
+        // GET: Vehicle/Index
+        public async Task<IActionResult> Index(int? page, string searchString) // Added page and searchString
+            {
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
 
-            ViewBag.Cars = vehicles.Count(v => v.Capacity >= 3 && v.Capacity <= 5);
-            ViewBag.Minivans = vehicles.Count(v => v.Capacity > 5 && v.Capacity <= 15);
-            ViewBag.Buses = vehicles.Count(v => v.Capacity > 15 && v.Capacity <= 50);
+            var allVehicles = await _vehicleRepository.GetAllAsync();
+            var vehicles = allVehicles.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+                {
+                vehicles = vehicles.Where(v => v.RegistrationNumber.Contains(searchString));
+                }
+
+            int totalItems = vehicles.Count();
+
+            var pagedVehicles = vehicles
+                .OrderByDescending(v => v.VehicleId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.SearchString = searchString;
+
+            ViewBag.TotalVehicles = allVehicles.Count();
+            ViewBag.LiveVehicles = allVehicles.Count(v => v.Status == "Active");
+            ViewBag.Maintenance = allVehicles.Count(v => v.Status == "Maintenance");
+            ViewBag.Inactive = allVehicles.Count(v => v.Status == "Inactive");
+
+            ViewBag.Cars = allVehicles.Count(v => v.Capacity >= 3 && v.Capacity <= 5);
+            ViewBag.Minivans = allVehicles.Count(v => v.Capacity > 5 && v.Capacity <= 15);
+            ViewBag.Buses = allVehicles.Count(v => v.Capacity > 15 && v.Capacity <= 50);
 
             var currentDate = DateTime.Now;
             var dueDate = currentDate.AddMonths(-4);
             var overdueDate = dueDate.AddDays(-14);
 
-            ViewBag.ServiceDue = vehicles.Count(v => v.LastServicedDate <= dueDate && v.LastServicedDate > overdueDate);
-            ViewBag.ServiceOverdue = vehicles.Count(v => v.LastServicedDate <= overdueDate);
-            var sortedVehicles = vehicles.OrderByDescending(v => v.VehicleId).ToList();
-            return View(sortedVehicles);
-                }
+            ViewBag.ServiceDue = allVehicles.Count(v => v.LastServicedDate <= dueDate && v.LastServicedDate > overdueDate);
+            ViewBag.ServiceOverdue = allVehicles.Count(v => v.LastServicedDate <= overdueDate);
 
-            // GET: Vehicle/Details/5
-            public async Task<IActionResult> Details(int? id)
+            return View(pagedVehicles);
+            }
+
+        // GET: Vehicle/Details/5
+        public async Task<IActionResult> Details(int? id)
                 {
                 if (id == null)
                     {
