@@ -1,0 +1,29 @@
+﻿@model TransportFleetManagementSystem.Model.Fuel
+
+<h2>Delete Fuel Record</h2>
+
+<div>
+    <h4>Are you sure you want to delete this record?</h4>
+    <dl class="row">
+        <dt class="col-sm-3">Vehicle Registration Number</dt>
+        <dd class="col-sm-9">@Model.Vehicle.RegistrationNumber</dd>
+
+        <dt class="col-sm-3">Fuel Quantity</dt>
+        <dd class="col-sm-9">@Model.FuelQuantity</dd>
+
+        <dt class="col-sm-3">Date</dt>
+        <dd class="col-sm-9">@Model.Date.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Fuel Price</dt>
+        <dd class="col-sm-9">@Model.FuelPrice</dd>
+
+        <dt class="col-sm-3">Cost</dt>
+        <dd class="col-sm-9">@Model.Cost</dd>
+    </dl>
+
+    <form asp-action="Delete" >
+        <input type="hidden" asp-for="FuelId" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

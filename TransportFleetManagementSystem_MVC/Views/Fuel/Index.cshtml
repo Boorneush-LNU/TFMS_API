@@ -1,0 +1,142 @@
+﻿@model IEnumerable<TransportFleetManagementSystem.Model.Fuel>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap-extended.min.css">
+<link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+	.card-title {
+		font-size: 1.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+
+	.card-body {
+		border-top: 2px solid white;
+		padding-top: 1rem;
+	}
+
+	.container {
+		width: 100%;
+		height: auto;
+	}
+
+	canvas {
+		max-width: 100%;
+		max-height: 100%;
+	}
+</style>
+
+<div class="container">
+	<div class="row mt-4">
+		<div class="container">
+			<div class="row mt-4">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="card" style=" background-color:white; color:#000046">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex">
+										<div class="align-self-center">
+											<i class="fa-solid fa-gas-pump  float-left" style="font-size:2rem"></i>
+										</div>
+										<div class="media-body text-right">
+											<h5>Total Fuel Qty</h5>
+											<h2>@ViewBag.TotalFuelQuantity L</h2>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card" style=" background-color:white; color:#000046">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex">
+										<div class="align-self-center">
+											<i class="fa-solid fa-coins float-left" style="font-size:2rem"></i>	
+										</div>
+										<div class="media-body text-right">
+											<h5>Total Cost</h5>
+											<h2>@ViewBag.TotalCost</h2>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card " style=" background-color:white; color:#000046">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex">
+										<div class="align-self-center">
+											<i class="icon-graph success font-large-2 float-left"></i>
+										</div>
+										<div class="media-body text-right">
+											<h5>Today's Price</h5>
+											<h2> @ViewBag.TodaysPrice</h2>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 mt-2">
+						<a asp-action="Create" class="btn btn-primary" style="background-color:#000046; color:white; margin-bottom: 10px;">+ Add New Fuel Record</a>
+						<a href="/Fuel/ExpensesChart" class="btn btn-primary" style="background-color:#000046; color:white;">
+							<i class="fa-solid fa-chart-bar"></i> Monthly Expenses Chart
+						</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="table-responsive mt-2">
+		<table class="table table-hover table-bordered">
+			<thead class="thead" style="background-color:#000046 ; color:white ">
+				<tr>
+					<th>Vehicle Registration Number</th>
+					<th>Fuel Quantity</th>
+					<th>Date</th>
+					<th>Fuel Price</th>
+					<th>Cost</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.Vehicle.RegistrationNumber</td>
+						<td>@item.FuelQuantity</td>
+						<td>@item.Date.ToShortDateString()</td>
+						<td>@item.FuelPrice</td>
+						<td>@item.Cost</td>
+						<td>
+							<a class="btn btn-sm" class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Details" asp-route-id="@item.FuelId"><i class="fas fa-eye"></i></a>
+							<a class="btn btn-sm" class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Edit" asp-route-id="@item.FuelId"><i class="fas fa-edit"></i></a>
+							<a class="btn btn-sm" class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Delete" asp-route-id="@item.FuelId" id="deleteVehicleModal"><i class="fas fa-trash"></i></a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+
+

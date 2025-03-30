@@ -1,0 +1,33 @@
+﻿@model TransportFleetManagementSystem.Models.Driver
+@{
+	ViewData["Title"] = "Delete Driver";
+}
+<div class="container mt-4">
+	<h2>Delete Driver</h2>
+	<p>Are you sure you want to delete the following driver?</p>
+	<table class="table table-bordered">
+		<tr>
+			<th>Name</th>
+			<td>@Model.Name</td>
+		</tr>
+		<tr>
+			<th>Phone</th>
+			<td>@Model.Phone</td>
+		</tr>
+		<tr>
+			<th>Address</th>
+			<td>@Model.Address</td>
+		</tr>
+		<tr>
+			<th>License Number</th>
+			<td>@Model.LicenseNumber</td>
+		</tr>
+	</table>
+	<form asp-action="Delete" method="post">
+		<input asp-for="DriverId" type="hidden" />
+		<button type="submit" class="btn btn-danger">
+			<i class="fa fa-trash"></i> Delete
+		</button>
+		<a asp-action="Index" class="btn btn-secondary">Cancel</a>
+	</form>
+</div>

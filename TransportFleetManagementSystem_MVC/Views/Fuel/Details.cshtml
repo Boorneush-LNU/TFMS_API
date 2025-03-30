@@ -1,0 +1,31 @@
+﻿@model TransportFleetManagementSystem.Model.Fuel
+
+<h2>Fuel Record Details</h2>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Fuel Record for Vehicle: @Model.Vehicle.RegistrationNumber</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-4">Vehicle Registration Number</dt>
+            <dd class="col-sm-8">@Model.Vehicle.RegistrationNumber</dd>
+
+            <dt class="col-sm-4">Fuel Quantity</dt>
+            <dd class="col-sm-8">@Model.FuelQuantity liters</dd>
+
+            <dt class="col-sm-4">Fuel Price</dt>
+            <dd class="col-sm-8">@Model.FuelPrice @* Display currency if applicable *@</dd>
+
+            <dt class="col-sm-4">Date of Refuel</dt>
+            <dd class="col-sm-8">@Model.Date.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-4">Total Cost</dt>
+            <dd class="col-sm-8">@Model.Cost</dd>
+        </dl>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<a asp-action="Edit" asp-route-id="@Model.FuelId" class="btn btn-warning">Edit</a>
+<a asp-action="Delete" asp-route-id="@Model.FuelId" class="btn btn-danger">Delete</a>

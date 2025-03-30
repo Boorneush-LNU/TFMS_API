@@ -1,0 +1,36 @@
+﻿@model TransportFleetManagementSystem.Model.Fuel
+
+<h2>Create Fuel Record</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="VehicleId">Vehicle Registration Number</label>
+        <select asp-for="VehicleId" asp-items="ViewBag.Vehicles" class="form-control" placeholder=" Enter the today's fuel price" required>
+            <option value="">-- Select Vehicle Registration --</option>
+        </select>
+        <span asp-validation-for="VehicleId" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="FuelQuantity">Fuel Quantity</label>
+        <input asp-for="FuelQuantity" class="form-control" placeholder="Enter the fuel quantity" />
+        <span asp-validation-for="FuelQuantity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Date">Date</label>
+        <input asp-for="Date" class="form-control" type="date" placeholder="Enter the today's date" />
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FuelPrice">Fuel Price (optional)</label>
+        <input asp-for="FuelPrice" class="form-control" placeholder="Enter the today's fuel price"/>
+        <span asp-validation-for="FuelPrice" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

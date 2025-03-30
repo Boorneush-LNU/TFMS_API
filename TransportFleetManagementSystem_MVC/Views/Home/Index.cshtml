@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Management System</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .header, .footer {
+           background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            text-align: center;
+        }
+
+            .header h1, .header h5, .footer p {
+                margin: 0;
+                color: #000046;
+            }
+
+        .btn-custom {
+            margin: 5px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://img.freepik.com/free-photo/mobile-app-location-digital-art_23-2151762839.jpg?t=st=1742962711~exp=1742966311~hmac=bf00d553fb243030c714e20a3d3aec40cbdbb6bc5dd68398c5f4a1cd0ada8842&w=1800');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>Fleet Edge</h1>
+                <h5>Transportation Management Made Simple.....</h5>
+            </div>
+            <div class="end">
+                <a class="btn btn-custom" style="background-color:#000046; color:white;" asp-controller="Vehicle" asp-action="Index">Login</a>
+                <a class="btn btn-custom" style="background-color:#000046; color:white;" asp-controller="Vehicle" asp-action="Index">Register</a>
+            </div>
+        </div>
+        <div class="content">
+            <!-- Add your main content here -->
+        </div>
+        <div class="footer">
+            <p>&copy; 2025 Fleet Edge. All rights reserved.</p>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
