@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            background-color: #000046;
+            font-weight: bold;
+            color: white;
+            font-size: x-large;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center; /* Center the form content */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left; /* Align labels left */
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"], .button {
+            background-color: #000046;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            text-decoration: none; /* Remove underline from anchor button*/
+        }
+
+            input[type="submit"]:hover, .button:hover {
+                background-color: #000046;
+            }
+
+        p[style="color:red"] {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            background-color: #2F78C4;
+            font-family: "Poppins", sans-serif;
+            font-size: 12px;
+            color: black;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <Transportationh1>Transportation Fleet Management System<h1>
+    </header>
+    <main>
+        <form asp-action="Login" method="post">
+            <h2>Login</h2>
+            @if (ViewBag.ErrorMessage != null)
+                {
+                <p style="color:red">@ViewBag.ErrorMessage</p>
+                }
+
+            <label for="Username">Username:</label>
+            <input type="text" id="Username" name="Username" value="@Model?.Username">
+            <label for="Password">Password:</label>
+            <input type="password" id="Password" name="Password" value="@Model?.Password">
+            <input type="submit" value="Login">
+            <p>Don't have an account? <a asp-controller="Login" asp-action="Register">Sign up</a></p>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; @DateTime.Now.Year Fleet Edge. All rights reserved.</p>
+    </footer>
+</body>
+</html>

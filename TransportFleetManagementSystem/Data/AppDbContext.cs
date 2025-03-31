@@ -12,7 +12,7 @@ namespace TransportFleetManagementSystem.Data
         public DbSet<Maintenance> Maintenances { get; set; }
         public DbSet<Performance> Performances { get; set; }
         public DbSet<Driver> Drivers { get; set; }
-
+        public DbSet<User> Users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlServer("Server=LTIN449500\\SQLEXPRESS;Database=TFMSDB;Trusted_Connection=True;TrustServerCertificate=True;");
 

@@ -1,292 +1,292 @@
 ﻿@model IEnumerable<TransportFleetManagementSystem.Model.Vehicle>
 @{
-    ViewData["Title"] = "Vehicle Management Dashboard";
-    var currentPage = ViewBag.CurrentPage ?? 1;
-    var pageSize = 10; // Number of items per page
-    var totalItems = ViewBag.TotalItems ?? 0;
-    var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
-    var searchString = ViewBag.SearchString;
+	ViewData["Title"] = "Vehicle Management Dashboard";
+	var currentPage = ViewBag.CurrentPage ?? 1;
+	var pageSize = 10; // Number of items per page
+	var totalItems = ViewBag.TotalItems ?? 0;
+	var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+	var searchString = ViewBag.SearchString;
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <style>
-    body {
-        color: #000046;
-    }
+	body {
+		color: #000046;
+	}
 
-    .card {
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        background-size: 1.5rem;
-        font-weight: bold;
-        border-bottom: none;
-    }
+	.card {
+		border: none;
+		border-radius: 10px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		background-size: 1.5rem;
+		font-weight: bold;
+		border-bottom: none;
+	}
 
-    .card-body {
-        padding: 1rem;
-        font-size: 1rem;
-        font-weight: bold;
-    }
+	.card-body {
+		padding: 1rem;
+		font-size: 1rem;
+		font-weight: bold;
+	}
 
-    .media {
-        align-items: center;
-    }
+	.media {
+		align-items: center;
+	}
 
-    .media-body {
-        text-align: right;
-    }
+	.media-body {
+		text-align: right;
+	}
 
-    .icon {
-        font-size: 2.25rem;
-        color: #000046;
-    }
+	.icon {
+		font-size: 2.25rem;
+		color: #000046;
+	}
 
-    #map {
-        height: 350px;
-        width: 100%;
-    }
+	#map {
+		height: 350px;
+		width: 100%;
+	}
 </style>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="row">
-                <div class="row mt-4">
-                    <div class="col-xl-4 col-sm-6 col-12 mb-3">
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="media d-flex">
-                                        <div class="align-self-center">
-                                            <i class="fas fa-check-circle icon"></i>
-                                        </div>
-                                        <div class="media-body text-right">
-                                            <h3>@ViewBag.LiveVehicles</h3>
-                                            <span>Active</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-6 col-12 mb-3">
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="media d-flex">
-                                        <div class="align-self-center">
-                                            <i class="fas fa-times-circle icon"></i>
-                                        </div>
-                                        <div class="media-body text-right">
-                                            <h3>@ViewBag.Inactive</h3>
-                                            <span>Inactive</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-6 col-12 mb-3">
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="media d-flex">
-                                        <div class="align-self-center">
-                                            <i class="fas fa-exclamation-circle icon"></i>
-                                        </div>
-                                        <div class="media-body text-right">
-                                            <h3>@ViewBag.Maintenance</h3>
-                                            <span>Maintenance</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-xl-6 col-sm-12 col-12">
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="media d-flex align-items-center">
-                                        <i class="fas fa-car-side icon"></i>
-                                        <div class="media-body text-right ml-2">
-                                            <h3>@ViewBag.Cars</h3>
-                                            <span>Cars</span>
-                                        </div>
-                                    </div>
-                                    <div class="media d-flex align-items-center mt-3">
-                                        <i class="fas fa-shuttle-van icon"></i>
-                                        <div class="media-body text-right ml-2">
-                                            <h3>@ViewBag.Minivans</h3>
-                                            <span>Mini Vans</span>
-                                        </div>
-                                    </div>
-                                    <div class="media d-flex align-items-center mt-3">
-                                        <i class="fas fa-bus-alt icon"></i>
-                                        <div class="media-body text-right ml-2">
-                                            <h3>@ViewBag.Buses</h3>
-                                            <span>Buses</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-sm-12 col-12">
-                        <div class="card">
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="media d-flex">
-                                        <div class="align-self-center">
-                                            <i class="fas fa-tools icon"></i>
-                                        </div>
-                                        <div class="media-body text-right">
-                                            <h3>@ViewBag.ServiceDue</h3>
-                                            <span>Service Due</span>
-                                        </div>
-                                    </div>
-                                    <div class="media d-flex mt-3">
-                                        <div class="align-self-center">
-                                            <i class="fas fa-exclamation-triangle icon"></i>
-                                        </div>
-                                        <div class="media-body text-right">
-                                            <h3>@ViewBag.ServiceOverdue</h3>
-                                            <span>Service Overdue</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<div class="row">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="row mt-4">
+					<div class="col-xl-4 col-sm-6 col-12 mb-3">
+						<div class="card">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex">
+										<div class="align-self-center">
+											<i class="fas fa-check-circle icon"></i>
+										</div>
+										<div class="media-body text-right">
+											<h3>@ViewBag.LiveVehicles</h3>
+											<span>Active</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-4 col-sm-6 col-12 mb-3">
+						<div class="card">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex">
+										<div class="align-self-center">
+											<i class="fas fa-times-circle icon"></i>
+										</div>
+										<div class="media-body text-right">
+											<h3>@ViewBag.Inactive</h3>
+											<span>Inactive</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-4 col-sm-6 col-12 mb-3">
+						<div class="card">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex">
+										<div class="align-self-center">
+											<i class="fas fa-exclamation-circle icon"></i>
+										</div>
+										<div class="media-body text-right">
+											<h3>@ViewBag.Maintenance</h3>
+											<span>Maintenance</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-xl-6 col-sm-12 col-12">
+						<div class="card">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex align-items-center">
+										<i class="fas fa-car icon mr-2"></i> <div class="media-body d-flex justify-content-between align-items-center mx-5">
+											<span>Cars</span>
+											<h3>@ViewBag.Cars</h3>
+										</div>
+									</div>
+									<div class="media d-flex align-items-center mt-3">
+										<i class="fas fa-shuttle-van icon mr-2"></i> <div class="media-body d-flex justify-content-between align-items-center mx-5">
+											<span>Mini Vans</span>
+											<h3>@ViewBag.Minivans</h3>
+										</div>
+									</div>
+									<div class="media d-flex align-items-center mt-3">
+										<i class="fas fa-bus-alt icon mr-2"></i> <div class="media-body d-flex justify-content-between align-items-center mx-5">
+											<span>Buses</span>
+											<h3>@ViewBag.Buses</h3>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-        <div class="col-md-4 mt-2">
-            <div id="map" class="mb-5"></div>
-        </div>
-    </div>
+					<div class="col-xl-6 col-sm-12 col-12">
+						<div class="card">
+							<div class="card-content">
+								<div class="card-body">
+									<div class="media d-flex">
+										<div class="align-self-center">
+											<i class="fas fa-tools icon"></i>
+										</div>
+										<div class="media-body text-right">
+											<h3>@ViewBag.ServiceDue</h3>
+											<span>Service Due</span>
+										</div>
+									</div>
+									<div class="media d-flex mt-3">
+										<div class="align-self-center">
+											<i class="fas fa-exclamation-triangle icon"></i>
+										</div>
+										<div class="media-body text-right">
+											<h3>@ViewBag.ServiceOverdue</h3>
+											<span>Service Overdue</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <div class="row mt-2">
-        <div class="col-md-12 d-flex justify-content-between align-items-center">
-            <a class="btn font-weight-bold" style="background-color:#000046 ; color:white " asp-action="Create"> + Add New Vehicle </a>
-            <form asp-action="Index" method="get" class="form-inline">
-                <input type="text" name="searchString" class="form-control mr-sm-2" placeholder="Search..." value="@searchString">
-                <button type="submit" class="btn btn-outline-primary font-weight-bold my-2 my-sm-0" style="background-color:#000046 ; color:white">Search</button>
-            </form>
-        </div>
-    </div>
+		<div class="col-md-4 mt-2">
+			<div id="map" class="mb-5"></div>
+		</div>
+	</div>
 
-    <div class="table-responsive mt-2">
-        <table class="table table-hover table-bordered">
-            <thead class="thead" style="background-color:#000046 ; color:white ">
-                <tr>
-                    <th class="col-3">Registration Number</th>
-                    <th class="col-2">Capacity</th>
-                    <th class="col-2">Status</th>
-                    <th class="col-2">Last Service Date</th>
-                    <th class="col-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                    {
-                    <tr>
-                        <td>@item.RegistrationNumber</td>
-                        <td>@item.Capacity</td>
-                        <td>@item.Status</td>
-                        <td>@item.LastServicedDate.ToString("dd-MM-yyyy")</td>
-                        <td>
-                            <a class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Details" asp-route-id="@item.VehicleId"><i class="fas fa-eye"></i></a>
-                            <a class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Edit" asp-route-id="@item.VehicleId"><i class="fas fa-edit"></i></a>
-                            <a class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Delete" asp-route-id="@item.VehicleId" id="deleteVehicleModal"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                    }
-            </tbody>
-        </table>
-    </div>
+		<div class="row mt-2">
+			<div class="col-md-12 d-flex justify-content-between align-items-center">
+				<a class="btn font-weight-bold" style="background-color:#000046 ; color:white " asp-action="Create"> + Add New Vehicle </a>
+				<form asp-action="Index" method="get" class="form-inline">
+					<input type="text" name="searchString" class="form-control mr-sm-2" placeholder="Enter Reg Number..." value="@searchString">
+					<button type="submit" class="btn btn-outline-primary font-weight-bold my-2 my-sm-0" style="background-color:#000046 ; color:white">Search</button>
+				</form>
+			</div>
+		</div>
+	
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                <a class="page-link"  asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-searchString="@searchString" tabindex="-1">Previous</a>
-            </li>
-            @for (int i = 1; i <= totalPages; i++)
-                {
-                <li class="page-item @(i == currentPage ? "active" : "")">
-                    <a class="page-link" style="color:#000046" asp-action="Index" asp-route-page="@i" asp-route-searchString="@searchString">@i</a>
-                </li>
-                }
-            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                <a class="page-link" style="color:#000046" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-searchString="@searchString">Next</a>
-            </li>
-        </ul>
-    </nav>
+	<div class="table-responsive mt-2">
+		<table class="table table-hover table-bordered">
+			<thead class="thead" style="background-color:#000046 ; color:white ">
+				<tr>
+					<th class="col-3">Registration Number</th>
+					<th class="col-2">Capacity</th>
+					<th class="col-2">Status</th>
+					<th class="col-2">Last Service Date</th>
+					<th class="col-2">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+					{
+					<tr>
+						<td>@item.RegistrationNumber</td>
+						<td>@item.Capacity</td>
+						<td>@item.Status</td>
+						<td>@item.LastServicedDate.ToString("dd-MM-yyyy")</td>
+						<td>
+							<a class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Details" asp-route-id="@item.VehicleId"><i class="fas fa-eye"></i></a>
+							<a class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Edit" asp-route-id="@item.VehicleId"><i class="fas fa-edit"></i></a>
+							<a class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Delete" asp-route-id="@item.VehicleId" id="deleteVehicleModal"><i class="fas fa-trash"></i></a>
+						</td>
+					</tr>
+					}
+			</tbody>
+		</table>
+	</div>
+
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-center">
+			<li class="page-item @(currentPage == 1 ? "disabled" : "")">
+				<a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-searchString="@searchString" tabindex="-1">Previous</a>
+			</li>
+			@for (int i = 1; i <= totalPages; i++)
+				{
+				<li class="page-item @(i == currentPage ? "active" : "")">
+					<a class="page-link" style="color:#000046" asp-action="Index" asp-route-page="@i" asp-route-searchString="@searchString">@i</a>
+				</li>
+				}
+			<li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+				<a class="page-link" style="color:#000046" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-searchString="@searchString">Next</a>
+			</li>
+		</ul>
+	</nav>
 </div>
 
 <script>
-    var map = L.map('map').setView([13.0827, 80.2707], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+	var map = L.map('map').setView([13.0827, 80.2707], 15);
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
 
-    var activeIcon = L.icon({
-        iconUrl: 'https://cdn-icons-png.flaticon.com/512/7080/7080248.png',
-        iconSize: [25, 25]
-    });
+	var activeIcon = L.icon({
+		iconUrl: 'https://cdn-icons-png.flaticon.com/512/7080/7080248.png',
+		iconSize: [25, 25]
+	});
 
-    var inactiveIcon = L.icon({
-        iconUrl: 'https://tse4.mm.bing.net/th/id/OIP.haL7GzASA-JmeH0f_5qcYQHaHa?rs=1&pid=ImgDetMain',
-        iconSize: [25, 25]
-    });
+	var inactiveIcon = L.icon({
+		iconUrl: 'https://tse4.mm.bing.net/th/id/OIP.haL7GzASA-JmeH0f_5qcYQHaHa?rs=1&pid=ImgDetMain',
+		iconSize: [25, 25]
+	});
 
-    var maintenanceIcon = L.icon({
-        iconUrl: 'https://cdn0.iconfinder.com/data/icons/transport-111/66/5-128.png',
-        iconSize: [25, 25]
-    });
+	var maintenanceIcon = L.icon({
+		iconUrl: 'https://cdn0.iconfinder.com/data/icons/transport-111/66/5-128.png',
+		iconSize: [25, 25]
+	});
 
-    var vehicles = [
-        { registrationNumber: 'TN 01 AA 1234', location: [13.0825, 80.2707], status: 'Active', icon: activeIcon },
-        { registrationNumber: 'TN 01 AA 1235', location: [13.0630, 80.2710], status: 'Active', icon: activeIcon },
-        { registrationNumber: 'TN 01 AA 1236', location: [13.0835, 80.2713], status: 'Active', icon: activeIcon },
-        { registrationNumber: 'TN 01 BB 5678', location: [13.0740, 80.2716], status: 'Inactive', icon: inactiveIcon },
-        { registrationNumber: 'TN 01 BB 5679', location: [13.0845, 80.2719], status: 'Inactive', icon: inactiveIcon },
-        { registrationNumber: 'TN 01 CC 9101', location: [13.0832, 80.2722], status: 'Maintenance', icon: maintenanceIcon }
-    ];
+	var vehicles = [
+		{ registrationNumber: 'TN 01 AA 1234', location: [13.0825, 80.2707], status: 'Active', icon: activeIcon },
+		{ registrationNumber: 'TN 01 AA 1235', location: [13.0630, 80.2710], status: 'Active', icon: activeIcon },
+		{ registrationNumber: 'TN 01 AA 1236', location: [13.0835, 80.2713], status: 'Active', icon: activeIcon },
+		{ registrationNumber: 'TN 01 BB 5678', location: [13.0740, 80.2716], status: 'Inactive', icon: inactiveIcon },
+		{ registrationNumber: 'TN 01 BB 5679', location: [13.0845, 80.2719], status: 'Inactive', icon: inactiveIcon },
+		{ registrationNumber: 'TN 01 CC 9101', location: [13.0832, 80.2722], status: 'Maintenance', icon: maintenanceIcon }
+	];
 
-    function getRandomCoordinates(bbox) {
-        var lat = bbox[0] + (Math.random() * (bbox[2] - bbox[0]));
-        var lng = bbox[1] + (Math.random() * (bbox[3] - bbox[1]));
-        return [lat, lng];
-    }
+	function getRandomCoordinates(bbox) {
+		var lat = bbox[0] + (Math.random() * (bbox[2] - bbox[0]));
+		var lng = bbox[1] + (Math.random() * (bbox[3] - bbox[1]));
+		return [lat, lng];
+	}
 
-    var boundingBox = [13.0600, 80.2600, 13.1000, 80.2800]; // Define your bounding box here
+	var boundingBox = [13.0600, 80.2600, 13.1000, 80.2800]; // Define your bounding box here
 
-    function addVehicle(registrationNumber, status) {
-        var location = getRandomCoordinates(boundingBox);
-        var icon;
-        if (status === 'Active') {
-            icon = activeIcon;
-        } else if (status === 'Inactive') {
-            icon = inactiveIcon;
-        } else if (status === 'Maintenance') {
-            icon = maintenanceIcon;
-        }
+	function addVehicle(registrationNumber, status) {
+		var location = getRandomCoordinates(boundingBox);
+		var icon;
+		if (status === 'Active') {
+			icon = activeIcon;
+		} else if (status === 'Inactive') {
+			icon = inactiveIcon;
+		} else if (status === 'Maintenance') {
+			icon = maintenanceIcon;
+		}
 
-        var vehicle = { registrationNumber: registrationNumber, location: location, status: status, icon: icon };
-        vehicles.push(vehicle);
-        var marker = L.marker(vehicle.location, { icon: vehicle.icon }).addTo(map);
-        marker.bindPopup(`<b>${vehicle.registrationNumber}</b><br>Status: ${vehicle.status}`);
-    }
-    vehicles.forEach(function (vehicle) {
-        var marker = L.marker(vehicle.location, { icon: vehicle.icon }).addTo(map);
-        marker.bindPopup(`<b>${vehicle.registrationNumber}</b><br>Status: ${vehicle.status}`);
-    });
+		var vehicle = { registrationNumber: registrationNumber, location: location, status: status, icon: icon };
+		vehicles.push(vehicle);
+		var marker = L.marker(vehicle.location, { icon: vehicle.icon }).addTo(map);
+		marker.bindPopup(`<b>${vehicle.registrationNumber}</b><br>Status: ${vehicle.status}`);
+	}
+	vehicles.forEach(function (vehicle) {
+		var marker = L.marker(vehicle.location, { icon: vehicle.icon }).addTo(map);
+		marker.bindPopup(`<b>${vehicle.registrationNumber}</b><br>Status: ${vehicle.status}`);
+	});
 </script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

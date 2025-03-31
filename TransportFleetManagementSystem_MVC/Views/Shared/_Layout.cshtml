@@ -176,6 +176,33 @@
 			font-size: 16px;
 		}
 
+		.dropdown-menu {
+            position: fixed; /* Fixed positioning for floating effect */
+            top: 50px; /* Adjust top position as needed */
+            right: 10px; /* Adjust right position as needed */
+            left: auto;
+            z-index: 1000;
+            min-width: 200px;
+            padding: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 0.25rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+            background-color: white;
+        }
+
+        .dropdown-menu .dropdown-item {
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-menu .dropdown-item img {
+            margin-right: 10px;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+        }
+
 		footer {
 			background-color: #2F78C4;
 			font-family: "Poppins", sans-serif;
@@ -277,13 +304,19 @@
 						<a class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center py-1" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
 							<img src="https://mdbootstrap.com/img/Photos/Avatars/img (1).jpg" class="rounded-circle" height="30" alt="" loading="lazy" />
 						</a>
-						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" style="min-width: 19rem;">
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
 							<li class="dropdown-item">
-								<img src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg" class="rounded-circle me-3" height="40" alt="" loading="lazy" />
-								<h6 class="mb-0">User Name</h6>
-								<p class="mb-2">mariecampbell@example.com</p>
-								<a class="mb-0" href="">Manage your Google Account</a>
-								<hr class="mb-2">
+								<img src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg" alt="User Avatar" />
+								<div>
+									<h6 class="mb-0">User Name</h6>
+									<p class="mb-2">mariecampbell@example.com</p>
+								</div>
+							</li>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li>
+								<a class="dropdown-item" asp-controller="Home" asp-action="Index">Logout</a>
 							</li>
 						</ul>
 					</li>
