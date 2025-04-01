@@ -3,131 +3,257 @@
     Layout = null;
 }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <head>
-    <title>@ViewData["Title"]</title>
-    <style>
-        * {
-            font-family: "Poppins", sans-serif;
-        }
-        body {
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            color:#000046
-        }
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Transportation Fleet Management System</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/tfms.styles.css" asp-append-version="true" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<style>
+		* {
+			font-family: "Poppins", sans-serif;
+		}
 
-        header {
-            background-color: #000046;
-            color: white;
-            text-align: center;
-            height:50px;
-            margin-top: auto;
-        }
+		body {
+			color: #000046;
+			font-family: "Poppins", sans-serif;
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
+			margin: 0;
+		}
 
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+		main {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 
-        form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            text-align: left;
-        }
+		.navbar {
+			background-color: #000046;
+			font-weight: bold;
+			color: white;
+			padding: 0.5rem 1rem;
+			font-size: x-large;
+		}
 
-        input[type="text"],
-        input[type="password"],
-        input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+			.navbar .navbar-brand {
+				display: flex;
+				align-items: center;
+			}
 
-        input[type="submit"] {
-            background-color: #000046;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            font-weight:bold;
-        }
+				.navbar .navbar-brand img {
+					height: 40px;
+					margin-right: 5px;
+				}
 
-            input[type="submit"]:hover {
-                background-color: #000046;
-                color:white;
-            }
+				.navbar .navbar-brand h1 {
+					font-size: 1.5rem;
+					font-family: "Poppins", sans-serif;
+					margin: auto;
+					color: white;
+				}
 
-        p[style="color:red"] {
-            color: red;
-            text-align: center;
-            margin-bottom: 10px;
-        }
+		.nav-link {
+			white-space: nowrap;
+		}
 
-        h2,h1{
-            text-align: center;
-        }
+		.navbar .navbar-nav .nav-item .nav-link i {
+			margin-right: 5px;
+		}
 
-        footer {
-            background-color: #2F78C4;
-            font-family: "Poppins", sans-serif;
-            font-size: 12px;
-            color: black;
-            text-align: center;
-            margin-top: auto;
-        }
+		.navbar .navbar-nav .nav-item {
+			background-color: #000046;
+		}
 
-        .login-link {
-            margin-top: 10px;
-        }
 
-    </style>
+		.navbar-nav .nav-link i {
+			font-size: 26px; /* Adjust the size as needed */
+			color: white; /* Change icon color to white */
+		}
+
+		.nav.flex-column .nav-item,
+		.nav.flex-column li {
+			border: 1px solid #000000; /* Border color */
+			padding: 5px; /* Padding inside the box */
+			margin-bottom: 2px; /* Space between boxes */
+			border-radius: 2px; /* Rounded corners */
+		}
+
+		.menu-bar {
+			display: none; /* Initially hidden */
+			position: absolute;
+			top: 60px; /* Adjust based on your navbar height */
+			left: 0;
+			background-color: #000046;
+			padding: 10px;
+			border-radius: 5px;
+			z-index: 999;
+		}
+
+			.menu-bar ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				display: flex; /* Display items in a row */
+			}
+
+				.menu-bar ul li {
+					margin: 0 10px; /* Space between menu items */
+					border: 1px solid white; /* White border around each menu item */
+					border-radius: 4px; /* Optional: Rounded corners */
+				}
+
+					.menu-bar ul li a {
+						color: white;
+						text-decoration: none;
+						font-size: 13.78px; /* Reduce text size */
+					}
+
+
+						.menu-bar ul li a i {
+							font-size: 16px; /* Reduce icon size */
+						}
+
+		form {
+			background-color: white;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			width: 300px;
+			text-align: center;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+			text-align: left;
+		}
+
+		input[type="text"],
+		input[type="email"],
+		input[type="password"] {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
+
+		input[type="submit"], .button {
+			background-color: #000046;
+			color: white;
+			padding: 10px 15px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			width: 100%;
+			margin-top: 10px;
+			text-decoration: none; /* Remove underline from anchor button*/
+		}
+
+			input[type="submit"]:hover, .button:hover {
+				background-color: #000046;
+			}
+
+		p[style="color:red"] {
+			color: red;
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		#currentDateTime {
+			font-size: 16px;
+		}
+
+		footer {
+			background-color: #2F78C4;
+			font-family: "Poppins", sans-serif;
+			font-size: 12px;
+			color: black;
+			text-align: center;
+			margin-top: auto;
+		}
+	</style>
+
+	<!--Script for dispalying Current Date and Time-->
+	<script>
+		function updateDateTime() {
+			var now = new Date();
+			var optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+			var optionsTime = { hour: '2-digit', minute: '2-digit' };
+			var dateString = now.toLocaleDateString('en-US', optionsDate);
+			var timeString = now.toLocaleTimeString('en-US', optionsTime);
+			var dateTimeString = dateString + ' ' + timeString;
+			document.getElementById('currentDateTime').innerText = dateTimeString;
+		}
+
+		setInterval(updateDateTime, 60000);
+		window.onload = updateDateTime;
+	</script>
+	<!--Script for dispalying Current Date and Time-->
+
 </head>
-<body>
-    <header>
-        <h1>Transportation Fleet Management System</h1>
-    </header>
-    <main>
-        <form asp-action="Register" method="post">
-            <h1>Sign Up</h1>
-            @if (ViewBag.ErrorMessage != null)
-                {
-                <p style="color:red">@ViewBag.ErrorMessage</p>
-                }
 
-            <label for="Username">Username:</label>
-            <input type="text" id="Username" name="Username" value="@Model?.Username">
-            <label for="Password">Password:</label>
-            <input type="password" id="Password" name="Password" value="@Model?.Password">
-            <label for="Email">Email:</label>
-            <input type="email" id="Email" name="Email" value="@Model?.Email">
-            <input type="submit" value="Register">
-            <p class="login-link">Already have an account? <a asp-controller="Login" asp-action="Index">Login</a></p>
-        </form>
-    </main>
-    <footer>
-        <p>&copy; @DateTime.Now.Year My Company. All rights reserved.</p>
-    </footer>
+<body>
+	<header>
+		<nav class="navbar">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">
+					<img src="https://tse2.mm.bing.net/th/id/OIP.0sTjAs-rmvW5v54Y-gg3wAHaHa?w=154&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Logo" />
+					<h1>Transportation Fleet Management System</h1>
+				</a>
+				<ul class="navbar-nav ms-auto d-flex align-items-center flex-row">
+					<li class="">
+						<span id="currentDateTime" class=" mx-5"></span>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<main>
+		<form asp-action="Register" method="post">
+			<h3>Sign Up</h3>
+			@if (ViewBag.ErrorMessage != null)
+				{
+				<p style="color:red">@ViewBag.ErrorMessage</p>
+				}
+
+			<label for="Username">Username:</label>
+			<input type="text" id="Username" name="Username" value="@Model?.Username">
+			<label for="Password">Password:</label>
+			<input type="password" id="Password" name="Password" value="@Model?.Password">
+			<label for="Email">Email:</label>
+			<input type="email" id="Email" name="Email" value="@Model?.Email">
+			<input type="submit" value="Register">
+			<p class="login-link mt-2">Already have an account? <a asp-controller="Login" asp-action="Index">Login</a></p>
+		</form>
+	</main>
+
+
+	<footer class="bg-body-tertiary text-center text-lg-start">
+		<div class="d-flex justify-content-between align-items-center p-2">
+			<!-- Copyright -->
+			<p class="mb-0 mx-5">© 2025 Copyright: TFMS.com</p>
+			<p class="mb-0 mx-5">TFMS ♥ crafted by Team CodeIgniters.</p>
+		</div>
+	</footer>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

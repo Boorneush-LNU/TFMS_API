@@ -7,12 +7,12 @@ namespace TransportFleetManagementSystem_MVC.Controllers
     {
     public class LoginController : Controller
         {
-        private readonly HttpClient _httpClient; // Inject HttpClient
+        private readonly HttpClient _httpClient; 
 
-        public LoginController(IHttpClientFactory httpClientFactory) //Inject IHttpClientFactory
+        public LoginController(IHttpClientFactory httpClientFactory) 
             {
-            _httpClient = httpClientFactory.CreateClient(); //Create HttpClient
-            _httpClient.BaseAddress = new System.Uri("https://localhost:7072/"); // Replace with your API base URL
+            _httpClient = httpClientFactory.CreateClient(); 
+            _httpClient.BaseAddress = new System.Uri("https://localhost:7072/"); 
             }
 
         public IActionResult Index()
