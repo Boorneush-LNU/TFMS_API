@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections;
+using Microsoft.EntityFrameworkCore;
 using TransportFleetManagementSystem.Data;
 using TransportFleetManagementSystem.Model;
 
@@ -55,5 +56,7 @@ namespace TransportFleetManagementSystem.Repositories
             {
             return await _context.Vehicles.AsNoTracking().FirstOrDefaultAsync(v => v.RegistrationNumber == registrationNumber);
             }
+
+        
         }
     }

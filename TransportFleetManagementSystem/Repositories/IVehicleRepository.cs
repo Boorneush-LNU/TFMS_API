@@ -1,4 +1,5 @@
-﻿using TransportFleetManagementSystem.Model;
+﻿using System.Collections;
+using TransportFleetManagementSystem.Model;
 
 namespace TransportFleetManagementSystem.Repositories
     {
@@ -10,5 +11,6 @@ namespace TransportFleetManagementSystem.Repositories
         Task AddAsync(Vehicle vehicle);
         Task UpdateAsync(Vehicle vehicle);
         Task DeleteAsync(int id);
+
         }
     }
