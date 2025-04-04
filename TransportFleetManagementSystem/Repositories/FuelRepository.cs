@@ -16,8 +16,13 @@ namespace TransportFleetManagementSystem.Repositories
         // Get all fuel records
         public async Task<IEnumerable<Fuel>> GetAllAsync()
             {
-            return await _context.Fuels.Include(f => f.Vehicle).ToListAsync();
+            return await _context.Fuels
+                .Include(f => f.Vehicle)
+                .OrderByDescending(f => f.Date)
+                .ThenByDescending(f => f.FuelId)
+                .ToListAsync();
             }
+
 
         // Get a fuel record by ID
         public async Task<Fuel> GetByIdAsync(int id)
@@ -31,25 +36,24 @@ namespace TransportFleetManagementSystem.Repositories
             }
         public async Task<IEnumerable<object>> GetMonthlyExpensesAsync()
             {
-            // Fetch grouped data from the database
             var groupedData = await _context.Fuels
-                .GroupBy(f => new { f.Date.Year, f.Date.Month }) // Group by Year and Month
+                .GroupBy(f => new { f.Date.Year, f.Date.Month })
                 .Select(g => new
                     {
-                    Year = g.Key.Year, // Keep the Year field
-                    MonthNumber = g.Key.Month, // Keep the Month field as a number
-                    Month = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"), // Format the month
-                    TotalExpense = g.Sum(f => f.Cost) // Calculate the sum
+                    Year = g.Key.Year,
+                    MonthNumber = g.Key.Month,
+                    Month = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"),
+                    TotalExpense = g.Sum(f => f.Cost)
                     })
-                .OrderBy(item => item.Year) // First order by Year
-                .ThenBy(item => item.MonthNumber) // Then order by Month number
+                .OrderBy(item => item.Year)
+                .ThenBy(item => item.MonthNumber)
                 .ToListAsync();
 
-            // Select only the necessary fields to return to the calling code
+
             var formattedData = groupedData
                 .Select(item => new
                     {
-                    Month = item.Month, // Formatted "MMMM yyyy"
+                    Month = item.Month,
                     TotalExpense = item.TotalExpense
                     })
                 .ToList();
@@ -59,7 +63,7 @@ namespace TransportFleetManagementSystem.Repositories
         // Add a new fuel record
         public async Task AddAsync(Fuel fuel)
             {
-            fuel.Cost = fuel.FuelQuantity * (fuel.FuelPrice ?? 0); // Calculate cost
+            fuel.Cost = fuel.FuelQuantity * (fuel.FuelPrice ?? 0);
             await _context.Fuels.AddAsync(fuel);
             await _context.SaveChangesAsync();
             }
@@ -70,11 +74,11 @@ namespace TransportFleetManagementSystem.Repositories
             var existingFuel = await _context.Fuels.FindAsync(fuel.FuelId);
             if (existingFuel != null)
                 {
-                _context.Entry(existingFuel).State = EntityState.Detached; // Detach the tracked entity
+                _context.Entry(existingFuel).State = EntityState.Detached;
 
-                fuel.Cost = fuel.FuelQuantity * (fuel.FuelPrice ?? 0); // Recalculate cost
-                _context.Fuels.Update(fuel); // Attach the updated entity
-                await _context.SaveChangesAsync(); // Save changes
+                fuel.Cost = fuel.FuelQuantity * (fuel.FuelPrice ?? 0);
+                _context.Fuels.Update(fuel);
+                await _context.SaveChangesAsync();
                 }
             }
 
@@ -96,18 +100,45 @@ namespace TransportFleetManagementSystem.Repositories
             }
 
         // Get the latest fuel price
-        public async Task<decimal> GetLatestFuelPriceAsync()
+        public async Task<decimal> GetLatestFuelPriceAsync(DateTime recordDate)
             {
-            // Sort by Date descending and then by ID descending to get the newest record in case dates are the same
             var latestFuel = await _context.Fuels
-                .OrderByDescending(f => f.Date) // Sort by date to get the latest date
-                .ThenByDescending(f => f.FuelId) // Sort by ID to ensure newest entry is picked when dates are equal
-                .FirstOrDefaultAsync(); // Fetch the latest record
+                .Where(f => f.FuelPrice.HasValue && f.FuelPrice > 0 && f.Date <= recordDate)
+                .OrderByDescending(f => f.Date)
+                .ThenByDescending(f => f.FuelId)
+                .FirstOrDefaultAsync();
 
-            // Return the FuelPrice of the newest record, or 0 if no records exist
             return latestFuel?.FuelPrice ?? 0;
             }
 
+
+        public async Task<IEnumerable<Fuel>> GetPagedFuelsAsync(int page, int pageSize, string searchString)
+            {
+            var fuelQuery = _context.Fuels.Include(f => f.Vehicle).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+                {
+                fuelQuery = fuelQuery.Where(f => f.Vehicle.RegistrationNumber.Contains(searchString));
+                }
+
+            return await fuelQuery
+                .OrderByDescending(f => f.Date)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            }
+
+        public async Task<int> GetTotalFuelCountAsync(string searchString)
+            {
+            var fuelQuery = _context.Fuels.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+                {
+                fuelQuery = fuelQuery.Where(f => f.Vehicle.RegistrationNumber.Contains(searchString));
+                }
+
+            return await fuelQuery.CountAsync();
+            }
 
 
 

@@ -9,6 +9,8 @@ builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IFuelRepository, FuelRepository>();
 builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IMaintenanceRepository, MaintenanceRepository>();
+builder.Services.AddScoped<ITripRepository, TripRepository>();
 
 builder.Services.AddDbContext<AppDbContext>();
 builder.Services.AddHttpClient();

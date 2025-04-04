@@ -1,9 +1,13 @@
-﻿@{
+﻿@model TransportFleetManagementSystem.Model.Fuel
+@{
+
     ViewData["Title"] = "Monthly Expenses Chart";
+
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="container mt-4">
+    <a class="btn" style="background-color:#000046; color:white; margin-left: 10px;" asp-action="Index">Back</a>
     <h3 class="text-center">Monthly Total Expenses</h3>
     <canvas id="expensesChart" style="max-height: 500px;"></canvas>
 </div>
@@ -11,44 +15,79 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+
         const monthlyExpenses = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.MonthlyExpenses));
 
         console.log(monthlyExpenses); // Debugging: Log data to console
 
         const labels = monthlyExpenses.map(item => item.Month); // X-axis labels
+
         const values = monthlyExpenses.map(item => item.TotalExpense); // Y-axis data
 
         const ctx = document.getElementById('expensesChart').getContext('2d');
+
         new Chart(ctx, {
+
             type: 'bar',
+
             data: {
+
                 labels: labels,
+
                 datasets: [{
+
                     label: 'Monthly Total Expenses (₹)',
+
                     data: values,
+
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
+
                     borderColor: 'rgba(75, 192, 192, 1)',
+
                     borderWidth: 1
+
                 }]
+
             },
+
             options: {
+
                 responsive: true,
+
                 scales: {
+
                     y: {
+
                         beginAtZero: true,
+
                         title: {
+
                             display: true,
+
                             text: 'Total Expense (₹)'
+
                         }
+
                     },
+
                     x: {
+
                         title: {
+
                             display: true,
+
                             text: 'Month'
+
                         }
+
                     }
+
                 }
+
             }
+
         });
     </script>
+
 }
+

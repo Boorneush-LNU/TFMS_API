@@ -1,6 +1,4 @@
-﻿@model IEnumerable<TransportFleetManagementSystem.Model.Fuel>
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+﻿<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -10,6 +8,13 @@
 <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap-extended.min.css">
 <link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
 
+@{
+	var currentPage = ViewBag.CurrentPage ?? 1;
+	var pageSize = ViewBag.PageSize ?? 10;
+	var totalItems = ViewBag.TotalItems ?? 0;
+	var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+	var searchString = ViewBag.SearchString;
+}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -33,6 +38,27 @@
 	canvas {
 		max-width: 100%;
 		max-height: 100%;
+	}
+
+	.pagination .page-link {
+		background-color: #000046;
+		color: white;
+		border: 1px solid #000046;
+	}
+
+		.pagination .page-link:hover {
+			background-color: #30308a;
+		}
+
+	.pagination .active .page-link {
+		background-color: #000046;
+		color: white;
+		font-weight: bold;
+	}
+
+	.pagination .disabled .page-link {
+		background-color: #5a5a5a;
+		color: #ddd;
 	}
 </style>
 
@@ -64,7 +90,7 @@
 								<div class="card-body">
 									<div class="media d-flex">
 										<div class="align-self-center">
-											<i class="fa-solid fa-coins float-left" style="font-size:2rem"></i>	
+											<i class="fa-solid fa-coins float-left" style="font-size:2rem"></i>
 										</div>
 										<div class="media-body text-right">
 											<h5>Total Cost</h5>
@@ -92,7 +118,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3 mt-2">
+					<div class="col-md-3">
 						<a asp-action="Create" class="btn btn-primary" style="background-color:#000046; color:white; margin-bottom: 10px;">+ Add New Fuel Record</a>
 						<a href="/Fuel/ExpensesChart" class="btn btn-primary" style="background-color:#000046; color:white;">
 							<i class="fa-solid fa-chart-bar"></i> Monthly Expenses Chart
@@ -117,7 +143,7 @@
 			</thead>
 			<tbody>
 				@foreach (var item in Model)
-				{
+					{
 					<tr>
 						<td>@item.Vehicle.RegistrationNumber</td>
 						<td>@item.FuelQuantity</td>
@@ -130,13 +156,27 @@
 							<a class="btn btn-sm" class="btn btn-sm" style="background-color: transparent; border: 2px solid #000046; color: #000046;" asp-action="Delete" asp-route-id="@item.FuelId" id="deleteVehicleModal"><i class="fas fa-trash"></i></a>
 						</td>
 					</tr>
-				}
+					}
 			</tbody>
 		</table>
+		<nav aria-label="Page navigation">
+			<ul class="pagination justify-content-center">
+				<li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+					<a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-searchString="@ViewBag.SearchString">Previous</a>
+				</li>
+
+				@for (int i = 1; i <= Math.Ceiling((double)ViewBag.TotalItems / ViewBag.PageSize); i++)
+					{
+					<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+						<a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewBag.SearchString">@i</a>
+					</li>
+					}
+
+				<li class="page-item @(ViewBag.CurrentPage * ViewBag.PageSize >= ViewBag.TotalItems ? "disabled" : "")">
+					<a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-searchString="@ViewBag.SearchString">Next</a>
+				</li>
+			</ul>
+		</nav>
+
 	</div>
 </div>
-
-
-
-
-

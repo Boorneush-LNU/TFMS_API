@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TransportFleetManagementSystem.Model;
 
-namespace TransportFleetManagementSystem.Models
+namespace TransportFleetManagementSystem.Model
     {
     public class Driver
         {

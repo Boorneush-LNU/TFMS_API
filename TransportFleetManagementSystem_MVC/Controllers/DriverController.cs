@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TransportFleetManagementSystem.Models;
+using TransportFleetManagementSystem.Model;
 using TransportFleetManagementSystem.Repositories;
 
 namespace TransportFleetManagementSystem_MVC.Controllers

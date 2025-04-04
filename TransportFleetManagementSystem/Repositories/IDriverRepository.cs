@@ -1,4 +1,4 @@
-﻿using TransportFleetManagementSystem.Models;
+﻿using TransportFleetManagementSystem.Model;
 
 namespace TransportFleetManagementSystem.Repositories
     {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TransportFleetManagementSystem.Model;
-using TransportFleetManagementSystem.Models;
 
 namespace TransportFleetManagementSystem.Data
     {

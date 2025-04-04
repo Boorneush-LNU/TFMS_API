@@ -1,34 +1,51 @@
 ﻿@model TransportFleetManagementSystem.Model.Fuel
-
 <h2>Edit Fuel Record</h2>
+<style>
+	.required-symbol {
+		color: #d9534f;
+		font-weight: bold;
+		margin-left: 2px;
+	}
+</style>
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit" method="post">
+			<input type="hidden" asp-for="FuelId" />
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="FuelId" />
+			<div class="form-group">
+				<label asp-for="VehicleId">Vehicle Registration Number<span class="required-symbol">*</span></label>
+				<select asp-for="VehicleId" asp-items="ViewBag.Vehicles" class="form-control">
+					<option value="">-- Select Vehicle Registration --</option>
+				</select>
+			</div>
 
-    <div class="form-group">
-        <label asp-for="VehicleId">Vehicle Registration Number</label>
-        <select asp-for="VehicleId" asp-items="ViewBag.Vehicles" class="form-control">
-            <option value="">-- Select Vehicle Registration --</option>
-        </select>
-    </div>
+			<div class="form-group">
+				<label asp-for="FuelQuantity">Fuel Quantity<span class="required-symbol">*</span></label>
+				<input asp-for="FuelQuantity" type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 187 && event.keyCode !== 189" class="form-control" placeholder="Enter the fuel quantity" min="1" max="999" required />
+				<span asp-validation-for="FuelQuantity" class="text-danger"></span>
+			</div>
 
-    <div class="form-group">
-        <label asp-for="FuelQuantity">Fuel Quantity</label>
-        <input asp-for="FuelQuantity" class="form-control" />
-        <span asp-validation-for="FuelQuantity" class="text-danger"></span>
-    </div>
+			<div class="form-group">
+				<label asp-for="Date">Date</label>
+				<input asp-for="Date" class="form-control" type="datetime-local" id="datetimeInput" placeholder="Enter today's date" required />
+				<span asp-validation-for="Date" class="text-danger"></span>
+			</div>
 
-    <div class="form-group">
-        <label asp-for="Date">Date</label>
-        <input asp-for="Date" class="form-control" type="date" />
-        <span asp-validation-for="Date" class="text-danger"></span>
-    </div>
+			<div class="form-group">
+				<label asp-for="FuelPrice">Fuel Price (optional)</label>
+				<input asp-for="FuelPrice" type="number" onkeydown="return event.keyCode !== 69 && event.keyCode !== 187 && event.keyCode !== 189" step="0.01" class="form-control" placeholder="Enter today's fuel price" min="1" readonly />
+				<span asp-validation-for="FuelPrice" class="text-danger"></span>
+			</div>
 
-    <div class="form-group">
-        <label asp-for="FuelPrice">Fuel Price</label>
-        <input asp-for="FuelPrice" class="form-control" readonly />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+			<button type="submit" class="btn btn-primary" style="background-color:#000046; color:white">Save Changes</button>
+			<a asp-action="Index" class="btn btn-secondary" style="background-color:#000046; color:white">Cancel</a>
+		</form>
+	</div>
+</div>
+<script>
+	const now = new Date();
+	const formattedDateTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+	document.getElementById('datetimeInput').setAttribute('min', formattedDateTime);
+	document.getElementById('datetimeInput').setAttribute('max', formattedDateTime);
+	document.getElementById('datetimeInput').value = formattedDateTime;
+</script>

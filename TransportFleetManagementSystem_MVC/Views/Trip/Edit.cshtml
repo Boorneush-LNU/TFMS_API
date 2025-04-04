@@ -1,0 +1,57 @@
+﻿@model TransportFleetManagementSystem.Model.Trip
+
+@{
+    ViewData["Title"] = "Edit Trip";
+}
+
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="TripId" />
+    <div class="form-group">
+        <label asp-for="VehicleId" class="control-label"></label><span style="color: red">*</span>
+        <select asp-for="VehicleId" class="form-control" asp-items="ViewBag.VehicleId"><option>Please Select the Vehicle ID</option></select>
+        <span asp-validation-for="VehicleId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DriverId" class="control-label"></label><span style="color: red">*</span>
+        <select asp-for="DriverId" class="form-control" asp-items="ViewBag.DriverId"><option>Please Select the Driver ID</option></select>
+        <span asp-validation-for="DriverId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StartLocation" class="control-label"></label><span style="color: red">*</span>
+        <input asp-for="StartLocation" class="form-control" />
+        <span asp-validation-for="StartLocation" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndLocation" class="control-label"></label><span style="color: red">*</span>
+        <input asp-for="EndLocation" class="form-control" />
+        <span asp-validation-for="EndLocation" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="StartTime" class="control-label"></label><span style="color: red">*</span>
+        <input asp-for="StartTime" class="form-control" type="datetime-local" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" id="startDate" value="@Model.StartTime.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndTime" class="control-label"></label><span style="color: red">*</span>
+        <input asp-for="EndTime" class="form-control" type="datetime-local" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" id="endDate" value="@Model.EndTime.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.getElementById('startDate').addEventListener('change', function() {
+            var startDate = this.value;
+            document.getElementById('endDate').setAttribute('min', startDate);
+        });
+    </script>
+}

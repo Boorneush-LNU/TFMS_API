@@ -14,15 +14,28 @@ namespace TransportFleetManagementSystem.Controllers
             _fuelRepository = fuelRepository;
             }
 
-        // GET: Fuel/Index
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(int page = 1, string searchString = "")
             {
-            var fuelRecords = await _fuelRepository.GetAllAsync();
+            int pageSize = 10;
+
+
+            var fuelRecords = await _fuelRepository.GetPagedFuelsAsync(page, pageSize, searchString);
+            int totalItems = await _fuelRepository.GetTotalFuelCountAsync(searchString);
+
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.PageSize = pageSize;
+            ViewBag.SearchString = searchString;
+
             ViewBag.TotalFuelQuantity = fuelRecords.Sum(f => f.FuelQuantity);
             ViewBag.TotalCost = await _fuelRepository.CalculateTotalCostAsync();
-            ViewBag.TodaysPrice = await _fuelRepository.GetLatestFuelPriceAsync();
+            ViewBag.TodaysPrice = await _fuelRepository.GetLatestFuelPriceAsync(DateTime.Now);
+
             return View(fuelRecords);
             }
+
 
         // GET: Fuel/Create
         public async Task<IActionResult> Create()
@@ -38,18 +51,27 @@ namespace TransportFleetManagementSystem.Controllers
             {
             if (!string.IsNullOrEmpty(fuel.VehicleId.ToString()) && fuel.FuelQuantity > 0 && fuel.Date <= DateTime.Now)
                 {
+                if (!fuel.FuelPrice.HasValue || fuel.FuelPrice == 0)
+                    {
+                    fuel.FuelPrice = await _fuelRepository.GetLatestFuelPriceAsync(fuel.Date);
+                    }
+
+
+                fuel.Cost = fuel.FuelQuantity * (fuel.FuelPrice ?? 0);
 
 
                 await _fuelRepository.AddAsync(fuel);
+
                 return RedirectToAction(nameof(Index));
                 }
             else
                 {
-
                 ViewBag.Vehicles = new SelectList(await _fuelRepository.GetAllVehiclesAsync(), "VehicleId", "RegistrationNumber", fuel.VehicleId);
+
                 return View(fuel);
                 }
             }
+
 
         // GET: Fuel/Edit/{id}
         public async Task<IActionResult> Edit(int id)
@@ -120,21 +142,20 @@ namespace TransportFleetManagementSystem.Controllers
             }
         public async Task<IActionResult> TotalCost()
             {
-            var totalCost = await _fuelRepository.CalculateTotalCostAsync(); // Calculate total cost
+            var totalCost = await _fuelRepository.CalculateTotalCostAsync();
             ViewBag.TotalCost = totalCost;
-            return View(); // Pass to the view
+            return View();
             }
 
-        /// <summary>
-        /// Action to display the chart of monthly expenses.
-        /// </summary>
+
         public async Task<IActionResult> ExpensesChart()
             {
-            var monthlyExpenses = await _fuelRepository.GetMonthlyExpensesAsync(); // Fetch monthly expenses from the repository
-            ViewBag.MonthlyExpenses = monthlyExpenses; // Pass data to the view
-            return View(); // Render the ExpensesChart.cshtml view
+            var monthlyExpenses = await _fuelRepository.GetMonthlyExpensesAsync();
+            ViewBag.MonthlyExpenses = monthlyExpenses;
+            return View();
             }
 
 
         }
     }
+    
