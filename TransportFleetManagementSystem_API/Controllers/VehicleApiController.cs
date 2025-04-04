@@ -6,7 +6,6 @@ using TransportFleetManagementSystem.Repositories;
 
 namespace TransportFleetManagementSystem_API.Controllers
     {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VehicleApiController : ControllerBase

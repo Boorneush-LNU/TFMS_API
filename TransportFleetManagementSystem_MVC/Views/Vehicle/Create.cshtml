@@ -4,27 +4,34 @@
     ViewData["Title"] = "Create Vehicle";
 }
 
+<style>
+    .required-field::after {
+        content: " *";
+        color: red;
+    }
+</style>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="RegistrationNumber" class="control-label"></label>
+                <label asp-for="RegistrationNumber" class="control-label required-field"></label>
                 <input asp-for="RegistrationNumber" class="form-control" />
                 <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Capacity" class="control-label"></label>
+                <label asp-for="Capacity" class="control-label required-field"></label>
                 <input asp-for="Capacity" class="form-control" />
-                <span asp-validation-for="Capacity" class="text-danger"></span>
+                <span asp-validation-for ="Capacity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
+                <label asp-for="Status" class="control-label required-field"></label>
                 <input asp-for="Status" class="form-control" />
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastServicedDate" class="control-label"></label>
+                <label asp-for="LastServicedDate" class="control-label required-field"></label>
                 <input asp-for="LastServicedDate" class="form-control" />
                 <span asp-validation-for="LastServicedDate" class="text-danger"></span>
             </div>

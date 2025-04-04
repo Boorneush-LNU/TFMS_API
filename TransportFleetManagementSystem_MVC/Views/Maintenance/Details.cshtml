@@ -1,0 +1,42 @@
+﻿@model TransportFleetManagementSystem.Model.Maintenance
+
+@{
+    ViewData["Title"] = "Maintenance Details";
+}
+
+<h2>Maintenance Details</h2>
+
+<div>
+    <h4>Maintenance</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Vehicle
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Vehicle.RegistrationNumber
+        </dd>
+        <dt class="col-sm-2">
+            Description
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Description
+        </dd>
+        <dt class="col-sm-2">
+            Scheduled Date
+        </dt>
+        <dd class="col-sm-10">
+            @Model.ScheduledDate.ToShortDateString()
+        </dd>
+        <dt class="col-sm-2">
+            Status
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Status
+        </dd>
+    </dl>
+</div>
+<div>
+    <a class="btn" style="background-color:#000046 ; color:white" asp-action="Edit" asp-route-id="@Model?.VehicleId"><i class="m-1 fas fa-edit"></i>Edit</a>
+    <a class="btn" style="background-color:#000046 ; color:white; margin-left: 10px;" asp-action="Index">Back to List</a>
+</div>

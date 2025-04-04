@@ -1,25 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using TransportFleetManagementSystem.Model;
-using TransportFleetManagementSystem.Repositories;
 
 namespace TransportFleetManagementSystem_MVC.Controllers
     {
-        public class VehicleController : Controller
-            {
-            private readonly IVehicleRepository _vehicleRepository;
+    public class VehicleController : Controller
+        {
+        private readonly HttpClient _httpClient;
 
-            public VehicleController(IVehicleRepository vehicleRepository)
-                {
-                _vehicleRepository = vehicleRepository;
-                }
+        public VehicleController(HttpClient httpClient)
+            {
+            _httpClient = httpClient;
+            }
 
         // GET: Vehicle/Index
-        public async Task<IActionResult> Index(int? page, string searchString) // Added page and searchString
+        public async Task<IActionResult> Index(int? page, string searchString)
             {
             int pageSize = 10;
             int pageNumber = page ?? 1;
 
-            var allVehicles = await _vehicleRepository.GetAllAsync();
+            var response = await _httpClient.GetAsync("https://localhost:7072/api/VehicleApi");
+            response.EnsureSuccessStatusCode();
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var allVehicles = JsonConvert.DeserializeObject<List<Vehicle>>(responseData);
             var vehicles = allVehicles.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -60,26 +67,29 @@ namespace TransportFleetManagementSystem_MVC.Controllers
 
         // GET: Vehicle/Details/5
         public async Task<IActionResult> Details(int? id)
+            {
+            if (id == null)
                 {
-                if (id == null)
-                    {
-                    return NotFound();
-                    }
-
-                var vehicle = await _vehicleRepository.GetByIdAsync(id.Value);
-                if (vehicle == null)
-                    {
-                    return NotFound();
-                    }
-
-                return View(vehicle);
+                return NotFound();
                 }
 
-            // GET: Vehicle/Create
-            public IActionResult Create()
+            var response = await _httpClient.GetAsync($"https://localhost:7072/api/VehicleApi/{id}");
+            if (!response.IsSuccessStatusCode)
                 {
-                return View();
+                return NotFound();
                 }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var vehicle = JsonConvert.DeserializeObject<Vehicle>(responseData);
+
+            return View(vehicle);
+            }
+
+        // GET: Vehicle/Create
+        public IActionResult Create()
+            {
+            return View();
+            }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -90,33 +100,38 @@ namespace TransportFleetManagementSystem_MVC.Controllers
                 return View(vehicle);
                 }
 
-            // Check if a vehicle with the same RegistrationNumber already exists
-            var existingVehicle = await _vehicleRepository.GetByRegistrationNumberAsync(vehicle.RegistrationNumber);
-            if (existingVehicle != null)
+            var jsonContent = JsonConvert.SerializeObject(vehicle);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("https://localhost:7072/api/VehicleApi", content);
+            if (!response.IsSuccessStatusCode)
                 {
-                ModelState.AddModelError("RegistrationNumber", "A vehicle with this registration number already exists.");
+                ModelState.AddModelError(string.Empty, "An error occurred while creating the vehicle.");
                 return View(vehicle);
                 }
 
-            await _vehicleRepository.AddAsync(vehicle);
             return RedirectToAction(nameof(Index));
             }
 
         // GET: Vehicle/Edit/5
         public async Task<IActionResult> Edit(int? id)
+            {
+            if (id == null)
                 {
-                if (id == null)
-                    {
-                    return NotFound();
-                    }
-
-                var vehicle = await _vehicleRepository.GetByIdAsync(id.Value);
-                if (vehicle == null)
-                    {
-                    return NotFound();
-                    }
-                return View(vehicle);
+                return NotFound();
                 }
+
+            var response = await _httpClient.GetAsync($"https://localhost:7072/api/VehicleApi/{id}");
+            if (!response.IsSuccessStatusCode)
+                {
+                return NotFound();
+                }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var vehicle = JsonConvert.DeserializeObject<Vehicle>(responseData);
+
+            return View(vehicle);
+            }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -132,47 +147,51 @@ namespace TransportFleetManagementSystem_MVC.Controllers
                 return View(vehicle);
                 }
 
-            try
+            var jsonContent = JsonConvert.SerializeObject(vehicle);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync($"https://localhost:7072/api/VehicleApi/{id}", content);
+            if (!response.IsSuccessStatusCode)
                 {
-                await _vehicleRepository.UpdateAsync(vehicle);
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the vehicle.");
+                return View(vehicle);
                 }
-            catch (Exception)
-                {
-                if (await _vehicleRepository.GetByIdAsync(vehicle.VehicleId) == null)
-                    {
-                    return NotFound();
-                    }
-                else
-                    {
-                    throw;
-                    }
-                }
+
             return RedirectToAction(nameof(Index));
             }
 
         // GET: Vehicle/Delete/5
         public async Task<IActionResult> Delete(int? id)
+            {
+            if (id == null)
                 {
-                if (id == null)
-                    {
-                    return NotFound();
-                    }
-
-                var vehicle = await _vehicleRepository.GetByIdAsync(id.Value);
-                if (vehicle == null)
-                    {
-                    return NotFound();
-                    }
-
-                return View(vehicle);
+                return NotFound();
                 }
 
-            [HttpPost, ActionName("Delete")]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> DeleteConfirmed(int id)
+            var response = await _httpClient.GetAsync($"https://localhost:7072/api/VehicleApi/{id}");
+            if (!response.IsSuccessStatusCode)
                 {
-                await _vehicleRepository.DeleteAsync(id);
-                return RedirectToAction(nameof(Index));
+                return NotFound();
                 }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var vehicle = JsonConvert.DeserializeObject<Vehicle>(responseData);
+
+            return View(vehicle);
+            }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+            {
+            var response = await _httpClient.DeleteAsync($"https://localhost:7072/api/VehicleApi/{id}");
+            if (!response.IsSuccessStatusCode)
+                {
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the vehicle.");
+                return RedirectToAction(nameof(Delete), new { id });
+                }
+
+            return RedirectToAction(nameof(Index));
             }
         }
+    }

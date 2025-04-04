@@ -10,6 +10,8 @@ namespace TransportFleetManagementSystem.Repositories
         Task AddAsync(Maintenance maintenance);
         Task UpdateAsync(Maintenance maintenance);
         Task DeleteAsync(int id);
-
+        Task<IEnumerable<Vehicle>> GetAllVehiclesAsync();
+        Task<Maintenance> GetByVehicleIdAsync(int vehicleId);
+        Task<bool> MaintenanceExistsAsync(int vehicleId);
         }
     }

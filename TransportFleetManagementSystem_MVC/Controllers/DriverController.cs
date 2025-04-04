@@ -1,39 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using TransportFleetManagementSystem.Model;
-using TransportFleetManagementSystem.Repositories;
 
 namespace TransportFleetManagementSystem_MVC.Controllers
     {
     public class DriverController : Controller
         {
-        private readonly IDriverRepository _driverRepository;
+        private readonly HttpClient _httpClient;
 
-        public DriverController(IDriverRepository driverRepository)
+        public DriverController(HttpClient httpClient)
             {
-            _driverRepository = driverRepository;
+            _httpClient = httpClient;
             }
 
         public async Task<IActionResult> Index()
             {
-            // Fetch all drivers
-            var drivers = await _driverRepository.GetAllDriversAsync();
+            var response = await _httpClient.GetAsync("https://localhost:7072/api/DriverApi");
+            response.EnsureSuccessStatusCode();
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var drivers = JsonConvert.DeserializeObject<List<Driver>>(responseData);
+
             return View(drivers);
             }
 
         public async Task<IActionResult> Details(int id)
             {
-            // Get driver details
-            var driver = await _driverRepository.GetDriverByIdAsync(id);
-            if (driver == null)
+            var response = await _httpClient.GetAsync($"https://localhost:7072/api/DriverApi/{id}");
+            if (!response.IsSuccessStatusCode)
                 {
                 return NotFound();
                 }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var driver = JsonConvert.DeserializeObject<Driver>(responseData);
+
             return View(driver);
             }
 
         public IActionResult Create()
             {
-            // Show the create form
             return View();
             }
 
@@ -41,24 +50,35 @@ namespace TransportFleetManagementSystem_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Driver driver)
             {
-            if (!string.IsNullOrEmpty(driver.Name) && !string.IsNullOrEmpty(driver.Phone) && driver.Phone.Length == 10 && !string.IsNullOrEmpty(driver.Address) && !string.IsNullOrEmpty(driver.LicenseNumber) && driver.LicenseNumber.Length <= 16)
+            if (!ModelState.IsValid)
                 {
-
-                // Add the driver using the repository
-                await _driverRepository.AddDriverAsync(driver);
-                return RedirectToAction(nameof(Index));
+                return View(driver);
                 }
-            return View(driver);
+
+            var jsonContent = JsonConvert.SerializeObject(driver);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("https://localhost:7072/api/DriverApi", content);
+            if (!response.IsSuccessStatusCode)
+                {
+                ModelState.AddModelError(string.Empty, "An error occurred while creating the driver.");
+                return View(driver);
+                }
+
+            return RedirectToAction(nameof(Index));
             }
 
         public async Task<IActionResult> Edit(int id)
             {
-            // Fetch the driver for editing
-            var driver = await _driverRepository.GetDriverByIdAsync(id);
-            if (driver == null)
+            var response = await _httpClient.GetAsync($"https://localhost:7072/api/DriverApi/{id}");
+            if (!response.IsSuccessStatusCode)
                 {
                 return NotFound();
                 }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var driver = JsonConvert.DeserializeObject<Driver>(responseData);
+
             return View(driver);
             }
 
@@ -70,24 +90,36 @@ namespace TransportFleetManagementSystem_MVC.Controllers
                 {
                 return BadRequest();
                 }
-            if (!string.IsNullOrEmpty(driver.Name) && !string.IsNullOrEmpty(driver.Phone) && driver.Phone.Length == 10 && !string.IsNullOrEmpty(driver.Address) && !string.IsNullOrEmpty(driver.LicenseNumber) && driver.LicenseNumber.Length <= 16)
-                {
 
-                // Update the driver using the repository
-                await _driverRepository.UpdateDriverAsync(driver);
-                return RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+                {
+                return View(driver);
                 }
-            return View(driver);
+
+            var jsonContent = JsonConvert.SerializeObject(driver);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync($"https://localhost:7072/api/DriverApi/{id}", content);
+            if (!response.IsSuccessStatusCode)
+                {
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the driver.");
+                return View(driver);
+                }
+
+            return RedirectToAction(nameof(Index));
             }
 
         public async Task<IActionResult> Delete(int id)
             {
-            // Fetch the driver for deletion
-            var driver = await _driverRepository.GetDriverByIdAsync(id);
-            if (driver == null)
+            var response = await _httpClient.GetAsync($"https://localhost:7072/api/DriverApi/{id}");
+            if (!response.IsSuccessStatusCode)
                 {
                 return NotFound();
                 }
+
+            var responseData = await response.Content.ReadAsStringAsync();
+            var driver = JsonConvert.DeserializeObject<Driver>(responseData);
+
             return View(driver);
             }
 
@@ -95,10 +127,14 @@ namespace TransportFleetManagementSystem_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
             {
-            // Delete the driver using the repository
-            await _driverRepository.DeleteDriverAsync(id);
+            var response = await _httpClient.DeleteAsync($"https://localhost:7072/api/DriverApi/{id}");
+            if (!response.IsSuccessStatusCode)
+                {
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the driver.");
+                return RedirectToAction(nameof(Delete), new { id });
+                }
+
             return RedirectToAction(nameof(Index));
             }
         }
-
     }

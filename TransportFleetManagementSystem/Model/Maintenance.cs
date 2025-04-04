@@ -18,5 +18,8 @@ namespace TransportFleetManagementSystem.Model
 
         public DateTime ScheduledDate { get; set; }
         public string? Status { get; set; }
+
+        public DateTime? NextMaintenanceDate { get; set; } // New property
+
         }
     }
